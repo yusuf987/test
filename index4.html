@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>GLS Demo</title>
+<!-------api---------->
+  <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
+
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+<!-------api---------->
+
+     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="style4.css">
+
+    <!-- Font Awesome JS -->
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>J.L.S</h3>
+                <strong>JLS</strong>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="#" id="upload-img">
+                        <i class="fa fa-upload"></i>
+                        Upload Image
+                    </a>
+                    <a href="#" id="rotate-left">
+                        <i class="fa fa-undo"></i>
+                        Rotate Left
+                    </a>
+                    <a href="#" id="rotate-right" >
+                        <i class="fa fa-redo"></i>
+                        Rotate Right
+                    </a>
+                    <a href="#" id="square-click">
+                        <i class="fa fa-square"></i>
+                        Square
+                    </a>
+                    <a href="#" id="rectangle-click">
+                        <i class="fas fa-square"></i>   
+                        Rectangle
+                    </a>
+                    <a href="#" id="star-click">
+                        <i class='fas fa-star'></i>   
+                        Star
+                    </a>
+                    <a href="#" id="line-click">                       |   
+                        Line
+                    </a>                    
+                    <a href="#" id="polygon-click">
+                        <i class="fas fa-draw-polygon"></i>
+                        Polygon
+                    </a>                 
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <!-- <span>Toggle Sidebar</span> -->
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">
+                                    <i class="far fa-file"></i>Save</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Cancel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                             <i class="far fa-copy"></i>Create New Project</a>
+
+                            </li>
+                          
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+          <div>
+                  <div id="map" class="map"></div>
+             <!--      <button id="rotate-left" title="Rotate clockwise">↻</button>
+    <button id="rotate-right" title="Rotate counterclockwise">↺</button> -->
+   <!--  <button id="pan-to-london">Pan to London</button> -->
+    <!-- <button id="elastic-to-moscow">Elastic to Moscow</button>
+    <button id="bounce-to-istanbul">Bounce to Istanbul</button>
+    <button id="spin-to-rome">Spin to Rome</button>
+    <button id="fly-to-bern">Fly to Bern</button>
+    <button id="rotate-around-rome">Rotate around Rome</button>
+    <button id="tour">Take a tour</button> -->
+
+    <form class="form-inline" style="display: none">
+      <label>Shape type &nbsp;</label>
+      <select id="type">
+        <option value="Square">Square</option>
+        <option value="Box">Box</option>
+        <option value="Star">Star</option>
+        <option value="Point">Point</option>
+        <option value="LineString">LineString</option>
+        <option value="Polygon">Polygon</option>
+        <option value="None">None</option>
+      </select>
+    </form>
+        <!--   <input class="form-control mr-2 mb-2 mt-2" type="button" value="Undo" id="undo"> -->
+         
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js" integrity="sha512-Pdu3zoEng2TLwwjnDne3O7zaeWZfEJHU5B63T+zLtME/wg1zfeSH/1wrtOzOC37u2Y1Ki8pTCdKsnbueOlFlMg==" crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+
+ <script>
+
+var Rectangle = (function () {
+    function Rectangle(canvas) {
+        var inst=this;
+        this.canvas = canvas;
+        this.className= 'Rectangle';
+        this.isDrawing = false;
+        this.bindEvents();
+    }
+
+	 Rectangle.prototype.bindEvents = function() {
+    var inst = this;
+    inst.canvas.on('mouse:down', function(o) {
+      inst.onMouseDown(o);
+    });
+    inst.canvas.on('mouse:move', function(o) {
+      inst.onMouseMove(o);
+    });
+    inst.canvas.on('mouse:up', function(o) {
+      inst.onMouseUp(o);
+    });
+    inst.canvas.on('object:moving', function(o) {
+      inst.disable();
+    })
+  }
+    Rectangle.prototype.onMouseUp = function (o) {
+      var inst = this;
+      inst.disable();
+    };
+
+    Rectangle.prototype.onMouseMove = function (o) {
+      var inst = this;
+      
+
+      if(!inst.isEnable()){ return; }
+      console.log("mouse move rectange");
+      var pointer = inst.canvas.getPointer(o.e);
+      var activeObj = inst.canvas.getActiveObject();
+
+      activeObj.stroke= 'red',
+      activeObj.strokeWidth= 5;
+      activeObj.fill = 'transparent';
+
+      if(origX > pointer.x){
+          activeObj.set({ left: Math.abs(pointer.x) }); 
+      }
+      if(origY > pointer.y){
+          activeObj.set({ top: Math.abs(pointer.y) });
+      }
+
+      activeObj.set({ width: Math.abs(origX - pointer.x) });
+      activeObj.set({ height: Math.abs(origY - pointer.y) });
+
+      activeObj.setCoords();
+      inst.canvas.renderAll();
+
+    };
+
+    Rectangle.prototype.onMouseDown = function (o) {
+      var inst = this;
+      inst.enable();
+
+      var pointer = inst.canvas.getPointer(o.e);
+      origX = pointer.x;
+      origY = pointer.y;
+
+    	var rect = new fabric.Rect({
+          left: origX,
+          top: origY,
+          originX: 'left',
+          originY: 'top',
+          width: pointer.x-origX,
+          height: pointer.y-origY,
+          angle: 0,
+          transparentCorners: false,
+          hasBorders: false,
+          hasControls: false
+      });
+
+  	  inst.canvas.add(rect).setActiveObject(rect);
+    };
+
+    Rectangle.prototype.isEnable = function(){
+      return this.isDrawing;
+    }
+
+    Rectangle.prototype.enable = function(){
+      this.isDrawing = true;
+    }
+
+    Rectangle.prototype.disable = function(){
+      this.isDrawing = false;
+    }
+
+    return Rectangle;
+}());
+
+
+
+var canvas = new fabric.Canvas('canvas');
+var arrow = new Rectangle(canvas);
+
+var extent = [0, 0, 1024, 968];
+      var projection = new ol.proj.Projection({
+        code: 'xkcd-image',
+        units: 'pixels',
+        extent: extent
+      });
+
+       // layers: [
+       //    new ol.layer.Image({
+       //      source: new ol.source.ImageStatic({
+       //        url: 'https://imgs.xkcd.com/comics/online_communities.png',
+       //        projection: projection,
+       //        imageExtent: extent
+       //      })
+       //    })
+       //  ],
+
+
+      //var imageLayer = new ImageLayer();
+
+      var raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+
+      var source = new ol.source.Vector({wrapX: false});
+
+      var vector = new ol.layer.Vector({
+        source: source
+      });
+
+
+
+      var typeSelect = document.getElementById('type');
+
+      var draw; // global so we can remove it later
+      function addInteraction() {
+        var value = typeSelect.value;
+        if (value !== 'None') {
+          var geometryFunction;
+          if (value === 'Square') {
+            value = 'Circle';
+            geometryFunction = ol.interaction.Draw.createRegularPolygon(4);
+          } else if (value === 'Box') {
+            value = 'Circle';
+            geometryFunction = ol.interaction.Draw.createBox();
+          } else if (value === 'Star') {
+            value = 'Circle';
+            geometryFunction = function(coordinates, geometry) {
+              if (!geometry) {
+                geometry = new ol.geom.Polygon(null);
+              }
+              var center = coordinates[0];
+              var last = coordinates[1];
+              var dx = center[0] - last[0];
+              var dy = center[1] - last[1];
+              var radius = Math.sqrt(dx * dx + dy * dy);
+              var rotation = Math.atan2(dy, dx);
+              var newCoordinates = [];
+              var numPoints = 12;
+              for (var i = 0; i < numPoints; ++i) {
+                var angle = rotation + i * 2 * Math.PI / numPoints;
+                var fraction = i % 2 === 0 ? 1 : 0.5;
+                var offsetX = radius * fraction * Math.cos(angle);
+                var offsetY = radius * fraction * Math.sin(angle);
+                newCoordinates.push([center[0] + offsetX, center[1] + offsetY]);
+              }
+              newCoordinates.push(newCoordinates[0].slice());
+              geometry.setCoordinates([newCoordinates]);
+              return geometry;
+            };
+          }
+          draw = new ol.interaction.Draw({
+            source: source,
+            type: /** @type {ol.geom.GeometryType} */ (value),
+            geometryFunction: geometryFunction
+          });
+          map.addInteraction(draw);
+        }
+      }
+
+
+/***************  view rotate  **********************/
+      var london = ol.proj.fromLonLat([-0.12755, 51.507222]);
+      var moscow = ol.proj.fromLonLat([37.6178, 55.7517]);
+      var istanbul = ol.proj.fromLonLat([28.9744, 41.0128]);
+      var rome = ol.proj.fromLonLat([12.5, 41.9]);
+      var bern = ol.proj.fromLonLat([7.4458, 46.95]);
+      var view = new ol.View({
+        center: istanbul,
+        zoom: 6
+      });
+ 
+      // var map = new ol.Map({      
+      //   layers: [raster, vector],  
+      //    target: 'map',
+      //   loadTilesWhileAnimating: true,
+      //   view: view
+      // });
+
+
+      var map = new ol.Map({
+        layers: [
+          new ol.layer.Image({
+            source: new ol.source.ImageStatic({
+              attributions: '© <a href="http://xkcd.com/license.html">xkcd</a>',
+              url: 'https://imgs.xkcd.com/comics/online_communities.png',
+              projection: projection,
+              imageExtent: extent
+            })
+          }),
+          vector
+        ],
+        target: 'map',
+        view: new ol.View({
+          projection: projection,
+          center: ol.extent.getCenter(extent),
+          zoom: 2,
+          maxZoom: 8
+        })
+      });
+
+      //map.setLayerIndex(dm_wms, 0); //set the image overlay to the bottom
+      //map.setLayerIndex(markers, 99); //set the marker layer to an arbitrarily high layer index
+      function onClick(id, callback) {
+        document.getElementById(id).addEventListener('click', callback);
+      }
+
+      onClick('rotate-left', function() {
+        view.animate({
+          rotation: view.getRotation() + Math.PI / 2
+        });
+      });
+
+      onClick('rotate-right', function() {
+        view.animate({
+          rotation: view.getRotation() - Math.PI / 2
+        });
+      });
+
+      onClick('rectangle-click', function() {
+        typeSelect.value="Box"
+        map.removeInteraction(draw);
+        addInteraction();
+      });
+
+      onClick('square-click', function() {
+        typeSelect.value="Square"
+        map.removeInteraction(draw);
+        addInteraction();
+      });
+
+      onClick('star-click', function() {
+        typeSelect.value="Star"
+        map.removeInteraction(draw);
+        addInteraction();
+      });
+
+      onClick('line-click', function() {
+        typeSelect.value="LineString"
+        map.removeInteraction(draw);
+        addInteraction();
+      });
+
+      onClick('polygon-click', function() {
+        typeSelect.value="Polygon"
+        map.removeInteraction(draw);
+        addInteraction();
+      });
+
+      
+
+
+
+
+
+
+      typeSelect.onchange = function() {
+        map.removeInteraction(draw);
+        addInteraction();
+      };
+
+      addInteraction();
+      document.getElementById('undo').addEventListener('click', function () {
+         draw.removeLastPoint();
+      });
+    </script>
+
+
+</body>
+
+</html>
